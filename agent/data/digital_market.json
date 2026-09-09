@@ -1,0 +1,22 @@
+{
+  "snapshot_id": "market-20260817-1600",
+  "updated_at": "2026-08-17 16:00:00",
+  "currency": "CNY",
+  "default_region": "CN",
+  "default_channel": "official",
+  "notice": "演示市场快照会在每次调用时重新读取；生产环境应由价格中心和库存中心替代。",
+  "overrides": [
+    {"sku_id":"PHONE-APPLE-IP16-128-BLK","region":"CN","channel":"official","current_price":4799,"original_price":4999,"stock":13,"inventory_status":"有货"},
+    {"sku_id":"PHONE-APPLE-IP16PRO-256-TI","region":"CN","channel":"official","current_price":7799,"original_price":7999,"stock":6,"inventory_status":"库存紧张"},
+    {"sku_id":"PHONE-HUAWEI-MATE70-256","region":"CN","channel":"official","current_price":5299,"original_price":5499,"stock":11,"inventory_status":"有货"},
+    {"sku_id":"PHONE-XIAOMI-15-256","region":"CN","channel":"official","current_price":4299,"original_price":4499,"stock":18,"inventory_status":"有货"},
+    {"sku_id":"PHONE-REDMI-K80-256","region":"CN","channel":"official","current_price":2299,"original_price":2499,"stock":26,"inventory_status":"有货"},
+    {"sku_id":"LAPTOP-APPLE-MBA13-M4-16-256","region":"CN","channel":"official","current_price":7799,"original_price":7999,"stock":9,"inventory_status":"库存紧张"},
+    {"sku_id":"LAPTOP-LENOVO-XIAOXINPRO14-R7-32-1T","region":"CN","channel":"official","current_price":5299,"original_price":5499,"stock":16,"inventory_status":"有货"},
+    {"sku_id":"LAPTOP-LENOVO-Y7000P-I7-16-1T-RTX4060","region":"CN","channel":"official","current_price":8199,"original_price":8499,"stock":4,"inventory_status":"库存紧张"},
+    {"sku_id":"LAPTOP-REDMI-BOOKPRO14-32-1T","region":"CN","channel":"official","current_price":4799,"original_price":4999,"stock":20,"inventory_status":"有货"},
+    {"sku_id":"LAPTOP-DELL-XPS13-32-1T","region":"CN","channel":"official","current_price":10499,"original_price":10999,"stock":0,"inventory_status":"暂时缺货"},
+    {"sku_id":"PHONE-APPLE-IP16PRO-256-TI","region":"CN","channel":"jd","current_price":7699,"original_price":7999,"stock":3,"inventory_status":"库存紧张"},
+    {"sku_id":"LAPTOP-LENOVO-XIAOXINPRO14-R7-32-1T","region":"CN","channel":"jd","current_price":5199,"original_price":5499,"stock":7,"inventory_status":"有货"}
+  ]
+}

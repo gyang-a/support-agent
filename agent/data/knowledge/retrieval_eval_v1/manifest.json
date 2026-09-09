@@ -1,0 +1,505 @@
+{
+  "benchmark_version": "2026.08-v2",
+  "documents": [
+    {
+      "document_id": "aurora_x1",
+      "path": "documents/aurora_x1_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "aurora_x1",
+      "display_model": "Aurora X1",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "aurora_x1_pro",
+      "path": "documents/aurora_x1_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "aurora_x1_pro",
+      "display_model": "Aurora X1 Pro",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "novabook_14",
+      "path": "documents/novabook_14_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "novabook_14",
+      "display_model": "NovaBook 14",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "novabook_14_pro",
+      "path": "documents/novabook_14_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "novabook_14_pro",
+      "display_model": "NovaBook 14 Pro",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "sonicpods_air",
+      "path": "documents/sonicpods_air_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "sonicpods_air",
+      "display_model": "SonicPods Air",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "sonicpods_pro",
+      "path": "documents/sonicpods_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "sonicpods_pro",
+      "display_model": "SonicPods Pro",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "meshwave_ax3000",
+      "path": "documents/meshwave_ax3000_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "meshwave_ax3000",
+      "display_model": "MeshWave AX3000",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "meshwave_ax6000",
+      "path": "documents/meshwave_ax6000_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "meshwave_ax6000",
+      "display_model": "MeshWave AX6000",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "chargehub_65",
+      "path": "documents/chargehub_65_guide.md",
+      "document_type": "product_manual",
+      "product_model": "chargehub_65",
+      "display_model": "ChargeHub 65",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "chargehub_100",
+      "path": "documents/chargehub_100_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "chargehub_100",
+      "display_model": "ChargeHub 100",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "luma_s2_standard",
+      "path": "documents/luma_s2_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "luma_s2_standard",
+      "display_model": "Luma S2",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "luma_s2_pro",
+      "path": "documents/luma_s2_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "luma_s2_pro",
+      "display_model": "Luma S2 Pro",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "orbit_fold_standard",
+      "path": "documents/orbit_fold_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "orbit_fold_standard",
+      "display_model": "Orbit Fold",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "orbit_fold_pro",
+      "path": "documents/orbit_fold_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "orbit_fold_pro",
+      "display_model": "Orbit Fold Max",
+      "category": "smartphone",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "terrabook_13_standard",
+      "path": "documents/terrabook_13_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "terrabook_13_standard",
+      "display_model": "TerraBook 13",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "terrabook_13_pro",
+      "path": "documents/terrabook_13_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "terrabook_13_pro",
+      "display_model": "TerraBook 13 Plus",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "forgebook_16_standard",
+      "path": "documents/forgebook_16_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "forgebook_16_standard",
+      "display_model": "ForgeBook 16",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "forgebook_16_pro",
+      "path": "documents/forgebook_16_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "forgebook_16_pro",
+      "display_model": "ForgeBook 16 Studio",
+      "category": "laptop",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "echobuds_standard",
+      "path": "documents/echobuds_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "echobuds_standard",
+      "display_model": "EchoBuds Lite",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "echobuds_pro",
+      "path": "documents/echobuds_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "echobuds_pro",
+      "display_model": "EchoBuds Max",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "wavebuds_standard",
+      "path": "documents/wavebuds_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "wavebuds_standard",
+      "display_model": "WaveBuds Sport",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "wavebuds_pro",
+      "path": "documents/wavebuds_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "wavebuds_pro",
+      "display_model": "WaveBuds Sport Pro",
+      "category": "earbuds",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "netnest_standard",
+      "path": "documents/netnest_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "netnest_standard",
+      "display_model": "NetNest AX1800",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "netnest_pro",
+      "path": "documents/netnest_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "netnest_pro",
+      "display_model": "NetNest AX5400",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "skymesh_standard",
+      "path": "documents/skymesh_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "skymesh_standard",
+      "display_model": "SkyMesh BE3600",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "skymesh_pro",
+      "path": "documents/skymesh_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "skymesh_pro",
+      "display_model": "SkyMesh BE7200",
+      "category": "router",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "voltdock_standard",
+      "path": "documents/voltdock_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "voltdock_standard",
+      "display_model": "VoltDock 45",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "voltdock_pro",
+      "path": "documents/voltdock_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "voltdock_pro",
+      "display_model": "VoltDock 90",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "powerbrick_standard",
+      "path": "documents/powerbrick_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "powerbrick_standard",
+      "display_model": "PowerBrick 120",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "powerbrick_pro",
+      "path": "documents/powerbrick_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "powerbrick_pro",
+      "display_model": "PowerBrick 160",
+      "category": "charger",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "pulsewatch_standard",
+      "path": "documents/pulsewatch_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "pulsewatch_standard",
+      "display_model": "PulseWatch 4",
+      "category": "wearable",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "pulsewatch_pro",
+      "path": "documents/pulsewatch_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "pulsewatch_pro",
+      "display_model": "PulseWatch 4 Ultra",
+      "category": "wearable",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "trailwatch_standard",
+      "path": "documents/trailwatch_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "trailwatch_standard",
+      "display_model": "TrailWatch S",
+      "category": "wearable",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "trailwatch_pro",
+      "path": "documents/trailwatch_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "trailwatch_pro",
+      "display_model": "TrailWatch S Pro",
+      "category": "wearable",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "canvastab_standard",
+      "path": "documents/canvastab_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "canvastab_standard",
+      "display_model": "CanvasTab 11",
+      "category": "tablet",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "canvastab_pro",
+      "path": "documents/canvastab_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "canvastab_pro",
+      "display_model": "CanvasTab 13",
+      "category": "tablet",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "noteslate_standard",
+      "path": "documents/noteslate_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "noteslate_standard",
+      "display_model": "NoteSlate Mini",
+      "category": "tablet",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "noteslate_pro",
+      "path": "documents/noteslate_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "noteslate_pro",
+      "display_model": "NoteSlate Pro",
+      "category": "tablet",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "lenscraft_standard",
+      "path": "documents/lenscraft_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "lenscraft_standard",
+      "display_model": "LensCraft C1",
+      "category": "camera",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "lenscraft_pro",
+      "path": "documents/lenscraft_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "lenscraft_pro",
+      "display_model": "LensCraft C1 Pro",
+      "category": "camera",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "pocketcam_standard",
+      "path": "documents/pocketcam_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "pocketcam_standard",
+      "display_model": "PocketCam V2",
+      "category": "camera",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "pocketcam_pro",
+      "path": "documents/pocketcam_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "pocketcam_pro",
+      "display_model": "PocketCam V2 Max",
+      "category": "camera",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "beambox_standard",
+      "path": "documents/beambox_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "beambox_standard",
+      "display_model": "BeamBox P1",
+      "category": "projector",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "beambox_pro",
+      "path": "documents/beambox_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "beambox_pro",
+      "display_model": "BeamBox P1 Plus",
+      "category": "projector",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "cinemapod_standard",
+      "path": "documents/cinemapod_standard_guide.md",
+      "document_type": "product_manual",
+      "product_model": "cinemapod_standard",
+      "display_model": "CinemaPod Mini",
+      "category": "projector",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "cinemapod_pro",
+      "path": "documents/cinemapod_pro_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "cinemapod_pro",
+      "display_model": "CinemaPod 4K",
+      "category": "projector",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "hometone_standard",
+      "path": "documents/hometone_standard_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "hometone_standard",
+      "display_model": "HomeTone S",
+      "category": "speaker",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    },
+    {
+      "document_id": "hometone_pro",
+      "path": "documents/hometone_pro_guide.md",
+      "document_type": "product_manual",
+      "product_model": "hometone_pro",
+      "display_model": "HomeTone S Max",
+      "category": "speaker",
+      "version": "2026.08-v2",
+      "format": "md"
+    },
+    {
+      "document_id": "airsense_standard",
+      "path": "documents/airsense_standard_guide.docx",
+      "document_type": "product_manual",
+      "product_model": "airsense_standard",
+      "display_model": "AirSense Mini",
+      "category": "air_monitor",
+      "version": "2026.08-v2",
+      "format": "docx"
+    },
+    {
+      "document_id": "airsense_pro",
+      "path": "documents/airsense_pro_guide.pdf",
+      "document_type": "product_manual",
+      "product_model": "airsense_pro",
+      "display_model": "AirSense Pro",
+      "category": "air_monitor",
+      "version": "2026.08-v2",
+      "format": "pdf"
+    }
+  ]
+}

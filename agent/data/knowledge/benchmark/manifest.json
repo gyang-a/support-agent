@@ -1,0 +1,12 @@
+{
+  "benchmark_version": "rag-benchmark-v1",
+  "notice": "全部文档为合成测试事实，不得发布为真实产品知识。",
+  "documents": [
+    {"document_id":"bench_iphone_16","path":"iphone_16_manual.md","document_type":"product_manual","product_model":"iphone_16","category":"smartphone","version":"test-v1"},
+    {"document_id":"bench_iphone_16_pro","path":"iphone_16_pro_manual.md","document_type":"product_manual","product_model":"iphone_16_pro","category":"smartphone","version":"test-v1"},
+    {"document_id":"bench_mate_70","path":"mate_70_manual.md","document_type":"product_manual","product_model":"mate_70","category":"smartphone","version":"test-v1"},
+    {"document_id":"bench_mate_70_pro","path":"mate_70_pro_manual.md","document_type":"product_manual","product_model":"mate_70_pro","category":"smartphone","version":"test-v1"},
+    {"document_id":"bench_y7000p","path":"y7000p_manual.md","document_type":"product_manual","product_model":"legion_y7000p","category":"laptop","version":"test-v1"},
+    {"document_id":"bench_diagnostics","path":"diagnostic_guide.md","document_type":"diagnostic_guide","product_model":"","category":"general","version":"test-v1"}
+  ]
+}

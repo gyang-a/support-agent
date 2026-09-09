@@ -1,0 +1,44 @@
+{
+  "snapshot_id": "logistics-20260817-1600",
+  "updated_at": "2026-08-17 16:00:00",
+  "notice": "演示物流轨迹会在每次调用时重新读取；生产环境应由承运商或物流聚合接口替代。",
+  "shipments": [
+    {
+      "order_id": "DG-1001-0001",
+      "carrier": "顺丰速运",
+      "tracking_no": "SF-DEMO-10010001",
+      "status": "已签收",
+      "estimated_delivery": "2026-07-14",
+      "events": [
+        {"time":"2026-07-12 18:10:00","status":"已揽收","location":"上海市","description":"快件已由顺丰揽收"},
+        {"time":"2026-07-13 06:40:00","status":"运输中","location":"上海转运中心","description":"快件已发往目的城市"},
+        {"time":"2026-07-14 08:15:00","status":"派送中","location":"杭州市","description":"快递员正在派送"},
+        {"time":"2026-07-14 16:30:00","status":"已签收","location":"杭州市","description":"本人签收"}
+      ]
+    },
+    {
+      "order_id": "DG-1001-0002",
+      "carrier": "京东物流",
+      "tracking_no": "JD-DEMO-10010002",
+      "status": "运输中",
+      "estimated_delivery": "2026-08-18",
+      "events": [
+        {"time":"2026-08-15 16:20:00","status":"已揽收","location":"北京市","description":"商品已出库并交给京东物流"},
+        {"time":"2026-08-16 03:50:00","status":"运输中","location":"北京亚洲一号","description":"包裹离开分拣中心"},
+        {"time":"2026-08-17 08:20:00","status":"运输中","location":"杭州分拣中心","description":"包裹已到达目的城市，预计次日送达"}
+      ]
+    },
+    {
+      "order_id": "DG-1002-0001",
+      "carrier": "顺丰速运",
+      "tracking_no": "SF-DEMO-10020001",
+      "status": "已签收",
+      "estimated_delivery": "2026-06-20",
+      "events": [
+        {"time":"2026-06-18 19:00:00","status":"已揽收","location":"深圳市","description":"快件已揽收"},
+        {"time":"2026-06-19 09:30:00","status":"运输中","location":"深圳转运中心","description":"快件运输中"},
+        {"time":"2026-06-20 11:00:00","status":"已签收","location":"广州市","description":"本人签收"}
+      ]
+    }
+  ]
+}

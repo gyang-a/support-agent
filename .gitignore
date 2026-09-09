@@ -1,0 +1,30 @@
+# Local model weights are runtime artifacts and must not be committed.
+agent/runtime/models/
+
+# Local secrets and environment configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.uv-cache/
+.coverage
+htmlcov/
+
+# Generated runtime data and local tooling
+.tmp/
+agent/runtime/
+docker/**/volumes/
+.understand-anything/
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+dist/

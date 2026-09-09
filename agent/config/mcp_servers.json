@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "digital_commerce": {
+      "command": "python",
+      "args": ["-m", "mcp_servers.digital_commerce_server"],
+      "cwd": ".",
+      "transport": "stdio"
+    }
+  }
+}
