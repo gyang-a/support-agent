@@ -125,8 +125,20 @@ export function InspectorPanel({
                 </p>
                 <p className="text-xs leading-6">{event.data.query}</p>
                 {event.data.results?.map((evidence, i) => (
-                  <EvidenceCard key={i} evidence={evidence} index={i} />
+                  <EvidenceCard
+                    key={i}
+                    evidence={evidence}
+                    index={i}
+                    stage={event.data.stage}
+                  />
                 ))}
+                {!event.data.results?.length && (
+                  <p className="rounded-lg border p-3 text-xs text-muted-foreground">
+                    {event.data.status === "knowledge_unavailable"
+                      ? "检索服务暂时不可用，本次没有返回证据。"
+                      : "本次检索没有返回匹配证据。"}
+                  </p>
+                )}
               </section>
             ))
           ) : (
@@ -141,7 +153,8 @@ export function InspectorPanel({
             </div>
           )}
           <p className="mt-6 text-[10px] leading-5 text-muted-foreground">
-            当前展示预检索选入上下文的片段；不代表全部召回候选，也不等于回答最终引用。
+            展示预检索上下文与 Agent
+            检索工具返回的片段（含缓存复用）；不代表全部召回候选，也不等于回答最终引用。
           </p>
         </TabsContent>
       </Tabs>

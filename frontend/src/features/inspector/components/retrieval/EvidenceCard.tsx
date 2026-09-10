@@ -3,9 +3,11 @@ import type { Evidence } from "@/features/execution/types";
 export function EvidenceCard({
   evidence,
   index,
+  stage,
 }: {
   evidence: Evidence;
   index: number;
+  stage?: string;
 }) {
   return (
     <details className="group rounded-xl border bg-white p-3.5">
@@ -29,9 +31,10 @@ export function EvidenceCard({
         <div className="mt-3 flex items-center justify-between text-[9px] text-[#839575]">
           <span className="flex items-center gap-1">
             <FileText size={10} />
-            模型上下文片段
+            {stage === "tool_result" ? "工具返回片段" : "模型上下文片段"}
           </span>
-          <span>展开原文 ↓</span>
+          <span className="group-open:hidden">展开原文 ↓</span>
+          <span className="hidden group-open:inline">收起原文 ↑</span>
         </div>
       </summary>
       <div className="mt-3 border-t pt-3">

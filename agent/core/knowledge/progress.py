@@ -9,6 +9,7 @@ from langchain.agents.middleware.types import AgentMiddleware
 from langchain_core.messages import SystemMessage, ToolMessage
 
 from core.workflow.failure import RetrievalStalled
+from core.observability.retrieval_events import emit_tool_retrieval
 
 logger = logging.getLogger(__name__)
 RAG_TOOLS = {"search_technical_documents", "search_after_sales_policies"}
@@ -74,6 +75,7 @@ class RagProgressMiddleware(AgentMiddleware):
                 if not isinstance(result, ToolMessage):
                     return result
                 self.cache[key] = result.content
+            emit_tool_retrieval(call, result.content, cached=cached)
             evidence = self._evidence(result.content)
             added = evidence - self.seen[name]
             self.seen[name].update(evidence)
