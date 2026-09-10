@@ -2,6 +2,18 @@
 
 面向数码商城的多智能体客服后端，基于 LangChain、LangGraph 和 FastAPI，支持商品咨询、选购推荐、配件兼容性、订单物流与售后服务。
 
+现已包含三栏客服工作台：会话管理、聊天回答、Agent 执行轨迹与检索证据。前端采用 Vite、React、TypeScript、Zustand、Tailwind CSS 和 shadcn/ui，启动与架构说明见 [前端 README](frontend/README.md)。
+
+后端启动后，在另一个终端执行：
+
+```powershell
+cd frontend
+npm ci
+npm run dev
+```
+
+访问 http://127.0.0.1:5173。工作台需要 MySQL 持久化；当前固定为演示用户，生产部署前需要接入登录鉴权。
+
 ## 核心能力
 
 - **多意图编排**：识别复合请求，拆解任务，并行执行独立任务，按依赖调度后续任务，最终汇总答复。

@@ -56,6 +56,9 @@ async def invoke_traced_agent(
         if getattr(message, "type", "") == "tool" and getattr(message, "status", "") == "error":
             tool_errors.append(getattr(message, "name", "unknown"))
 
+    from core.observability.live_events import emit
+    for name in tool_names:
+        emit("tool.completed", label=name, status="failed" if name in tool_errors else "completed", stage="summary")
     metadata = dict(state.get("metadata", {}))
     metadata["execution"] = {
         "agent_name": agent_name,

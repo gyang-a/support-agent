@@ -8,6 +8,7 @@ from time import perf_counter
 from typing import Any
 
 from core.workflow.tasks import SpecialistResponse, TaskPlan
+from core.observability.live_events import emit, task_identity
 
 
 class TaskScheduler:
@@ -17,6 +18,8 @@ class TaskScheduler:
         self.timeout_seconds = timeout_seconds
 
     async def _execute(self, state, task, dependencies):
+        task_identity.set({"task_id": task["task_id"], "agent_name": task["agent_name"]})
+        emit("task.started", status="running")
         started = perf_counter()
         local = deepcopy(state)
         local.update(
@@ -45,6 +48,7 @@ class TaskScheduler:
             result["metadata"] = {"error_type": type(exc).__name__}
             context_update = {}
         result["metadata"]["task_latency_ms"] = round((perf_counter() - started) * 1000, 2)
+        emit("task.completed", status=result["status"], response=result["response"], latency_ms=result["metadata"]["task_latency_ms"])
         return result, context_update
 
     async def __call__(self, state):
@@ -55,6 +59,8 @@ class TaskScheduler:
         except ValueError:
             return {"planning_error": "暂时无法完整处理这次请求，请分别说明需要查询或办理的事项。"}
         tasks = [task.model_dump() for task in plan.tasks]
+        for task in tasks:
+            emit("task.planned", task_id=task["task_id"], agent_name=task["agent_name"], instruction=task["query"], depends_on=task["depends_on"], status="pending")
         pending = {task["task_id"]: task for task in tasks}
         results = {}
         running: dict[asyncio.Task, str] = {}
@@ -73,6 +79,7 @@ class TaskScheduler:
                             ]},
                         }
                         del pending[task_id]
+                        emit("task.completed", task_id=task_id, agent_name=task["agent_name"], status="blocked", response="前置事项尚未完成")
                     elif all(dep in results for dep in deps) and len(running) < self.max_concurrency:
                         future = asyncio.create_task(self._execute(
                             state, task, [results[dep] for dep in deps]

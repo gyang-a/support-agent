@@ -126,6 +126,8 @@ def compact_technical_evidence(raw_result: str) -> tuple[str, bool]:
         }
         for item in data.get("results", [])
     ]
+    from core.observability.live_events import emit
+    emit("retrieval.completed", query=data.get("query", ""), results=evidence, stage="model_context", label="技术知识预检索 · 模型上下文")
     return json.dumps(
         {
             "query": data.get("query", ""),
@@ -158,6 +160,8 @@ def compact_policy_evidence(raw_result: str) -> tuple[str, bool]:
         }
         for item in data.get("results", [])
     ]
+    from core.observability.live_events import emit
+    emit("retrieval.completed", query=data.get("query", ""), results=evidence, stage="model_context", label="售后政策预检索 · 模型上下文")
     return json.dumps(
         {
             "query": data.get("query", ""),
