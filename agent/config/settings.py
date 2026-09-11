@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -95,6 +95,14 @@ class Settings(BaseSettings):
     # MySQL is authoritative for checkpoints, conversations and preferences.
     mysql_url: str = Field(default="", alias="MYSQL_URL")
     mysql_echo: bool = Field(default=False, alias="MYSQL_ECHO")
+    auth_cookie_secure: bool = Field(default=False, alias="AUTH_COOKIE_SECURE")
+    auth_session_days: int = Field(default=7, ge=1, le=30, alias="AUTH_SESSION_DAYS")
+
+    reranker_provider: Literal["siliconflow", "local"] = Field(default="siliconflow", alias="RERANKER_PROVIDER")
+    reranker_api_key: str | None = Field(default=None, alias="RERANKER_API_KEY")
+    reranker_base_url: str = Field(default="https://api.siliconflow.cn/v1", alias="RERANKER_BASE_URL")
+    reranker_timeout: float = Field(default=15.0, gt=0, alias="RERANKER_TIMEOUT")
+    embedding_namespace: str = Field(default="", pattern=r"^[A-Za-z0-9_]*$", max_length=64, alias="EMBEDDING_NAMESPACE")
 
     # Background full-snapshot preference extraction.
     preference_extraction_interval_seconds: int = Field(

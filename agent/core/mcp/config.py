@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -22,8 +23,18 @@ def load_mcp_connections() -> dict[str, dict[str, Any]]:
         connections = json.load(file).get("mcpServers", {})
 
     normalized: dict[str, dict[str, Any]] = {}
+    from config.settings import Settings
+    # MCP stdio inherits only a small OS allowlist by default. Forward the
+    # application's configured environment explicitly for env-only Docker runs.
+    application_env = {
+        field.alias: os.environ[field.alias]
+        for field in Settings.model_fields.values()
+        if field.alias and field.alias in os.environ
+    }
     for server_name, connection in connections.items():
         item = dict(connection)
+        if item.get("transport") == "stdio":
+            item["env"] = {**application_env, **item.get("env", {})}
         # MCP 子进程必须与主进程使用同一虚拟环境，否则新增数据库/向量库依赖
         # 可能在系统 Python 中不可见。
         if item.get("command") in {"python", "python3"}:

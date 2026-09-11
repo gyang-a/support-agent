@@ -17,7 +17,7 @@ from langchain_openai import OpenAIEmbeddings  # noqa: E402
 
 from config import get_settings  # noqa: E402
 from core.knowledge.evaluation import OfflineHybridBenchmark, evaluate_questions  # noqa: E402
-from core.knowledge.reranking import BgeCrossEncoderReranker  # noqa: E402
+from core.knowledge.reranking import create_reranker  # noqa: E402
 
 
 BENCHMARK_ROOT = AGENT_ROOT / "data" / "knowledge" / "benchmark"
@@ -84,14 +84,7 @@ async def run(output: Path) -> dict:
         check_embedding_ctx_length=False,
         model_kwargs={"encoding_format": "float"},
     )
-    reranker = BgeCrossEncoderReranker(
-        model_name=settings.reranker_model,
-        device="cpu",
-        batch_size=settings.reranker_batch_size,
-        max_length=settings.reranker_max_length,
-        cache_dir=settings.reranker_cache_dir,
-        allow_heuristic_fallback=False,
-    )
+    reranker = create_reranker(settings.model_copy(update={"reranker_allow_heuristic_fallback": False}))
     benchmark = OfflineHybridBenchmark(embeddings, reranker=reranker)
     await benchmark.build(BENCHMARK_ROOT / "manifest.json")
     report = await evaluate_questions(benchmark, BENCHMARK_ROOT / "questions.json")

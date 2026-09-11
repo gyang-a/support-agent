@@ -43,7 +43,7 @@ from core.knowledge.ingestion import (  # noqa: E402
     ParsedDocument,
 )
 from core.knowledge.milvus_store import TechnicalKnowledgeStore  # noqa: E402
-from core.knowledge.reranking import BgeCrossEncoderReranker  # noqa: E402
+from core.knowledge.reranking import create_reranker  # noqa: E402
 
 
 QA_TASKS = ("questanswer_1doc", "questanswer_2docs", "questanswer_3docs")
@@ -417,14 +417,7 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
     settings = get_settings()
     if not (settings.embedding_api_key and settings.embedding_model and settings.embedding_base_url):
         raise RuntimeError("请先配置 EMBEDDING_API_KEY、EMBEDDING_MODEL、EMBEDDING_BASE_URL")
-    reranker = BgeCrossEncoderReranker(
-        model_name=settings.reranker_model,
-        device="cpu",
-        batch_size=settings.reranker_batch_size,
-        max_length=settings.reranker_max_length,
-        cache_dir=settings.reranker_cache_dir,
-        allow_heuristic_fallback=False,
-    )
+    reranker = create_reranker(settings.model_copy(update={"reranker_allow_heuristic_fallback": False}))
     store = CrudEvaluationStore(
         host=settings.milvus_host,
         port=settings.milvus_port,
@@ -436,6 +429,8 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         reranker=reranker,
     )
     store.collection = _collection_name(documents, settings.embedding_dimension)
+    if settings.embedding_namespace:
+        store.collection += "_" + settings.embedding_namespace
     try:
         await store.initialize()
         if not store.available:

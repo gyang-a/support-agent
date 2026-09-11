@@ -1,5 +1,6 @@
+import { apiFetch } from "./apiFetch";
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch("/api/workspace" + path, {
+  const response = await apiFetch("/api/workspace" + path, {
     ...init,
     headers: { "Content-Type": "application/json", ...init?.headers },
   });

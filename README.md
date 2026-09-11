@@ -1,6 +1,6 @@
 # Support Agent · 智能客服
 
-面向数码商城的多智能体客服后端，基于 LangChain、LangGraph 和 FastAPI，支持商品咨询、选购推荐、配件兼容性、订单物流与售后服务。
+面向数码商城的多智能体客服后端，基于 LangChain、LangGraph 和 FastAPI，支持商品咨询、选购推荐、订单物流与售后服务。
 
 现已包含三栏客服工作台：会话管理、聊天回答、Agent 执行轨迹与检索证据。前端采用 Vite、React、TypeScript、Zustand、Tailwind CSS 和 shadcn/ui，启动与架构说明见 [前端 README](frontend/README.md)。
 
@@ -12,7 +12,11 @@ npm ci
 npm run dev
 ```
 
-访问 http://127.0.0.1:5173。工作台需要 MySQL 持久化；当前固定为演示用户，生产部署前需要接入登录鉴权。
+访问 http://127.0.0.1:5173。工作台需要 MySQL 持久化。用户名、密码注册登录后，各账号独立保存会话、聊天记录和偏好；订单、物流等业务统一使用 `user_1001` 演示身份。
+
+云服务器 Docker / Nginx 部署步骤见 [部署说明](docker/DEPLOYMENT.md)。Embedding 和重排均使用硅基流动 API，不需要部署模型容器或下载权重。
+
+部署需要额外上传 `deployment-data/snapshot/` 开发数据库快照（已排除在 Git 和镜像外）。Compose 会先恢复、校验 MySQL 与 Milvus，再启动后端；旧 1024 维知识向量已经直接迁入当前集合，无需重新向量化。
 
 ## 核心能力
 
@@ -62,10 +66,10 @@ Copy-Item .\agent\.env.example .\agent\.env
 启动 API 服务：
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.app_main:app --host 127.0.0.1 --port 5000
+.\.venv\Scripts\python.exe -m uvicorn app.app_main:app --host 127.0.0.1 --port 5001
 ```
 
-启动后访问 [API 文档](http://127.0.0.1:5000/docs)。也可以使用命令行交互入口：
+启动后访问 [API 文档](http://127.0.0.1:5001/docs)。也可以使用命令行交互入口：
 
 ```powershell
 .\.venv\Scripts\python.exe .\agent\main.py

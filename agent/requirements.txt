@@ -32,9 +32,8 @@ pypdf>=5.0.0,<7.0.0
 python-docx>=1.1.0,<2.0.0
 jieba>=0.42.0,<0.43.0
 
-# Dedicated Cross-Encoder reranking for RAG candidates
-torch>=2.2.0,<3.0.0
-transformers>=4.44.0,<6.0.0
+# Remote reranking (local weights are optional; see requirements-local-reranker.txt)
+httpx>=0.28.0,<1.0.0
 
 # Test
 pytest>=8.0.0

@@ -17,7 +17,7 @@ from config import get_settings
 
 from .ingestion import ParsedDocument, StructuredDocumentChunker
 from .ingestion.chunking import KnowledgeChunk
-from .reranking import BgeCrossEncoderReranker, CandidateReranker, MetadataAwareReranker
+from .reranking import create_reranker, CandidateReranker, MetadataAwareReranker
 
 
 logger = logging.getLogger(__name__)
@@ -44,6 +44,7 @@ class TechnicalKnowledgeStore:
         embedding_base_url: str,
         embedding_dimension: int,
         reranker: CandidateReranker | None = None,
+        embedding_namespace: str = "",
     ) -> None:
         self.host = host
         self.port = port
@@ -53,6 +54,8 @@ class TechnicalKnowledgeStore:
         # 应用层稳定标识，但不再参与 hybrid_search 的结果融合，规避部分
         # Milvus 3.x 版本对 VARCHAR 搜索结果 ID 报 unsupported ID type。
         self.collection = f"digital_technical_knowledge_v3_{embedding_dimension}"
+        if embedding_namespace:
+            self.collection += "_" + embedding_namespace
         self.client: Any = None
         self.embeddings: OpenAIEmbeddings | None = None
         self.reranker = reranker or MetadataAwareReranker()
@@ -531,14 +534,7 @@ async def get_technical_knowledge_store() -> TechnicalKnowledgeStore:
             # FastMCP 正在处理工具请求时，不在事件循环线程中执行 Pydantic
             # Settings 与 OpenAI 客户端的同步初始化，避免阻塞协议响应。
             settings = await asyncio.to_thread(get_settings)
-            reranker = BgeCrossEncoderReranker(
-                model_name=settings.reranker_model,
-                device=settings.reranker_device,
-                batch_size=settings.reranker_batch_size,
-                max_length=settings.reranker_max_length,
-                cache_dir=settings.reranker_cache_dir,
-                allow_heuristic_fallback=settings.reranker_allow_heuristic_fallback,
-            )
+            reranker = create_reranker(settings)
             _store = await asyncio.to_thread(
                 TechnicalKnowledgeStore,
                 host=settings.milvus_host,
@@ -548,6 +544,7 @@ async def get_technical_knowledge_store() -> TechnicalKnowledgeStore:
                 embedding_model=settings.embedding_model,
                 embedding_base_url=settings.embedding_base_url,
                 embedding_dimension=settings.embedding_dimension,
+                embedding_namespace=settings.embedding_namespace,
                 reranker=reranker,
             )
             await _store.initialize()

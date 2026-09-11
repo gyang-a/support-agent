@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 import logging
 import threading
+import math
+import httpx
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
@@ -82,6 +84,72 @@ class CandidateReranker(Protocol):
 
     def rerank(self, query: str, candidates: list[dict[str, Any]], *, limit: int) -> list[dict[str, Any]]:
         ...
+
+
+class SiliconFlowReranker:
+    """Remote scoring with the same scope filtering and public result contract."""
+
+    def __init__(self, *, api_key: str | None, base_url: str, model_name: str,
+                 timeout: float = 15, allow_heuristic_fallback: bool = True,
+                 enforce_model_scope: bool = True):
+        self.api_key, self.base_url, self.model_name = api_key, base_url, model_name
+        self.timeout = timeout
+        self.allow_heuristic_fallback = allow_heuristic_fallback
+        self.enforce_model_scope = enforce_model_scope
+        self.fallback = MetadataAwareReranker(enforce_model_scope=enforce_model_scope)
+
+    def rerank(self, query, candidates, *, limit):
+        prepared = _prepare_candidates(query, candidates, enforce_model_scope=self.enforce_model_scope)
+        if not prepared:
+            return []
+        try:
+            if not self.api_key:
+                raise ValueError("RERANKER_API_KEY is required")
+            response = httpx.post(
+                self.base_url.rstrip("/") + "/rerank",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json={"model": self.model_name, "query": query,
+                      "documents": [_passage(item) for item in prepared],
+                      "top_n": min(max(1, limit), len(prepared)), "return_documents": False},
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+            results = response.json()["results"]
+            rescored, seen = [], set()
+            for item in results:
+                index, score = item["index"], float(item["relevance_score"])
+                if type(index) is not int or not 0 <= index < len(prepared) or index in seen or not math.isfinite(score):
+                    raise ValueError("Invalid rerank response")
+                seen.add(index)
+                rescored.append({**prepared[index], "rerank_score": score,
+                                 "reranker_mode": "siliconflow_api", "reranker_model": self.model_name})
+            if len(rescored) != min(max(1, limit), len(prepared)):
+                raise ValueError("Incomplete rerank response")
+            return sorted(rescored, key=lambda item: item["rerank_score"], reverse=True)
+        except Exception as exc:
+            if not self.allow_heuristic_fallback:
+                raise
+            # Do not log request headers, candidate contents, or provider error bodies.
+            logger.warning("Rerank API unavailable (%s); using heuristic fallback", type(exc).__name__)
+            return [{**item, "reranker_model": self.model_name, "reranker_error": "api_unavailable"}
+                    for item in self.fallback.rerank(query, prepared, limit=limit)]
+
+
+def create_reranker(settings, *, enforce_model_scope=True):
+    if settings.reranker_provider == "siliconflow":
+        return SiliconFlowReranker(
+            api_key=settings.reranker_api_key, base_url=settings.reranker_base_url,
+            model_name=settings.reranker_model, timeout=settings.reranker_timeout,
+            allow_heuristic_fallback=settings.reranker_allow_heuristic_fallback,
+            enforce_model_scope=enforce_model_scope,
+        )
+    return BgeCrossEncoderReranker(
+        model_name=settings.reranker_model, device=settings.reranker_device,
+        batch_size=settings.reranker_batch_size, max_length=settings.reranker_max_length,
+        cache_dir=settings.reranker_cache_dir,
+        allow_heuristic_fallback=settings.reranker_allow_heuristic_fallback,
+        enforce_model_scope=enforce_model_scope,
+    )
 
 
 def _prepare_candidates(

@@ -98,6 +98,7 @@ async def init_agent_system() -> None:
         embedding_model=settings.embedding_model,
         embedding_base_url=settings.embedding_base_url,
         embedding_dimension=settings.embedding_dimension,
+        embedding_namespace=settings.embedding_namespace,
         similarity_threshold=settings.semantic_cache_similarity_threshold,
         ttl_seconds=settings.semantic_cache_ttl_seconds,
         knowledge_version=settings.semantic_cache_knowledge_version,
@@ -183,13 +184,15 @@ async def _yield_sse(response_text: str, *, cached: bool = False, task_results=N
     yield f"data: {json.dumps(final_event)}\n\n"
 
 
-async def stream_chat(query: str, user_id: str, session_id: str):
+async def stream_chat(query: str, user_id: str, session_id: str, *, account_id: str | None = None):
     """以 MySQL 保存上下文，以 Milvus 复用严格筛选后的公开 FAQ。"""
     if graph is None:
         raise RuntimeError("Agent system is not initialized")
+    # Account identity owns memory; user_id remains the commerce tool identity.
+    memory_user_id = account_id or user_id
     config = {
         "configurable": {
-            "thread_id": thread_id_for(user_id, session_id),
+            "thread_id": thread_id_for(memory_user_id, session_id),
             "user_id": user_id,
         }
     }
@@ -212,7 +215,7 @@ async def stream_chat(query: str, user_id: str, session_id: str):
                 "tasks": [], "task_results": None, "planning_error": "",
             },
         )
-        await _record_turn(user_id, session_id, query, cached_response)
+        await _record_turn(memory_user_id, session_id, query, cached_response)
         async for event in _yield_sse(cached_response, cached=True):
             yield event
         return
@@ -222,15 +225,15 @@ async def stream_chat(query: str, user_id: str, session_id: str):
         "user_id": user_id,
         "session_id": session_id,
         # 可共享 FAQ 必须在无用户画像的条件下生成，避免缓存个性化内容。
-        "memory_context": "" if cache_eligible else await _preference_context(user_id),
+        "memory_context": "" if cache_eligible else await _preference_context(memory_user_id),
         "next_agent": "",
         "metadata": {},
     }
     result = await graph.ainvoke(state, config=config)
     response_text = result["messages"][-1].content
     metadata = result.get("metadata", {})
-    await _record_turn(user_id, session_id, query, response_text, metadata)
-    await _save_explicit_preferences(user_id, query)
+    await _record_turn(memory_user_id, session_id, query, response_text, metadata)
+    await _save_explicit_preferences(memory_user_id, query)
     if (
         cache_eligible
         and len(result.get("tasks", [])) <= 1

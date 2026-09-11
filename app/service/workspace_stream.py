@@ -11,7 +11,7 @@ active: dict[str, asyncio.Task] = {}
 active_conversations: set[str] = set()
 
 
-async def execute_stream(run_id, conversation_id, query):
+async def execute_stream(run_id, conversation_id, query, account_id):
     queue = asyncio.Queue()
     run = dict(id=run_id, conversation_id=conversation_id, query=query, response="", status="running", events=[], created_at=now())
     sequence = 0
@@ -26,9 +26,9 @@ async def execute_stream(run_id, conversation_id, query):
     async def execute():
         token = event_sink.set(emit)
         try:
-            await save_run(run)
+            await save_run(run, account_id)
             emit("run.started", dict(label="正在理解需求并安排任务"))
-            async for frame in stream_chat(query, DEMO_USER, conversation_id):
+            async for frame in stream_chat(query, DEMO_USER, conversation_id, account_id=account_id):
                 if not frame.startswith("data:"):
                     continue
                 data = json.loads(frame[5:].strip())
@@ -49,7 +49,7 @@ async def execute_stream(run_id, conversation_id, query):
             event_sink.reset(token)
             # Once final persistence starts, repeated stop requests must not cancel it.
             active.pop(run_id, None)
-            persistence = asyncio.create_task(save_run(run))
+            persistence = asyncio.create_task(save_run(run, account_id))
             try:
                 try:
                     await asyncio.shield(persistence)

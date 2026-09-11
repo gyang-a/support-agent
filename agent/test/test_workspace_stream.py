@@ -9,10 +9,10 @@ from core.observability.live_events import emit, event_sink
 def test_stream_persists_answer_and_public_trace(monkeypatch):
     saved = []
 
-    async def save(run):
+    async def save(run, account_id):
         saved.append(copy.deepcopy(run))
 
-    async def chat(*args):
+    async def chat(*args, **kwargs):
         emit("task.started", task_id="t1", agent_name="product_agent", status="running")
         yield 'data: {"content":"你好"}\n\n'
         yield 'data: {"done":true}\n\n'
@@ -21,7 +21,7 @@ def test_stream_persists_answer_and_public_trace(monkeypatch):
     monkeypatch.setattr(bridge, "stream_chat", chat)
 
     async def run():
-        return [json.loads(frame[5:]) async for frame in bridge.execute_stream("test", "conversation", "hello")]
+        return [json.loads(frame[5:]) async for frame in bridge.execute_stream("test", "conversation", "hello", "account_test")]
 
     events = asyncio.run(run())
     assert [e["type"] for e in events] == ["run.started", "task.started", "message.delta", "run.completed"]
@@ -33,16 +33,16 @@ def test_stream_persists_answer_and_public_trace(monkeypatch):
 
 def test_cancel_stops_execution_and_saves_cancelled_state(monkeypatch):
     saved = []
-    async def save(run):
+    async def save(run, account_id):
         saved.append(copy.deepcopy(run))
-    async def chat(*args):
+    async def chat(*args, **kwargs):
         await asyncio.Event().wait()
         yield ""
     monkeypatch.setattr(bridge, "save_run", save)
     monkeypatch.setattr(bridge, "stream_chat", chat)
 
     async def run():
-        stream = bridge.execute_stream("cancel", "conversation", "hello")
+        stream = bridge.execute_stream("cancel", "conversation", "hello", "account_test")
         await anext(stream)
         bridge.active["cancel"].cancel()
         frames = [frame async for frame in stream]

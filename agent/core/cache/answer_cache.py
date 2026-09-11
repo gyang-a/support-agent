@@ -73,6 +73,7 @@ class SemanticAnswerCache:
         similarity_threshold: float = 0.96,
         ttl_seconds: int = 604800,
         knowledge_version: str = "digital-support-v1",
+        embedding_namespace: str = "",
     ) -> None:
         self.host = host
         self.port = port
@@ -82,6 +83,8 @@ class SemanticAnswerCache:
         self.ttl_seconds = ttl_seconds
         self.knowledge_version = knowledge_version
         self.collection = f"digital_semantic_answer_cache_v1_{embedding_dimension}"
+        if embedding_namespace:
+            self.collection += "_" + embedding_namespace
         self.client: Any = None
         self.available = False
         self.embeddings: OpenAIEmbeddings | None = None

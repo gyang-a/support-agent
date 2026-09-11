@@ -7,7 +7,7 @@ Vite + React + TypeScript + Zustand + Tailwind CSS + shadcn/ui。
 在项目根目录启动后端（需配置 agent/.env 和 MySQL）：
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.app_main:app --host 127.0.0.1 --port 5000
+.\.venv\Scripts\python.exe -m uvicorn app.app_main:app --host 127.0.0.1 --port 5001
 ```
 
 另开终端：
@@ -18,7 +18,7 @@ npm ci
 npm run dev
 ```
 
-打开 http://127.0.0.1:5173。Vite 将 /api 代理到后端 5000 端口。
+打开 http://127.0.0.1:5173。Vite 将 /api 代理到后端 5001 端口。
 
 ## 分层
 
@@ -34,7 +34,7 @@ npm run dev
 
 ## 当前接口边界
 
-- 工作台固定使用服务端演示用户 user_1001，不是生产登录系统。
+- 工作台使用独立登录账号隔离会话和记忆；订单、物流等业务固定使用演示用户 user_1001。
 - 任务规划、开始、完成事件来自实际调度器。
 - 工具详情是任务执行后的名称及状态摘要，不含原始参数。
 - 证据展示技术知识和售后政策预检索上下文，以及 Agent 执行中检索工具返回的片段（含任务内缓存复用）。按检索调用分别展示，不代表全部召回候选或回答最终引用。
@@ -54,3 +54,9 @@ npm test
 ```
 
 部署时用 Nginx 托管 dist，并将 /api 转发到 FastAPI；/chat/* 路径回退 index.html。SSE 关闭代理缓冲。API Key 只配置在后端，不能使用 VITE_ 前缀传到浏览器。
+
+## 账号与部署
+
+访问工作台前需要注册或登录：用户名为 3–32 位字母、数字或下划线，密码 8–128 位。用户名不区分大小写。登录态由后端 HttpOnly Cookie 管理，退出会清空页面内存状态。不同账号拥有各自的会话、执行记录和记忆；Agent 查询业务时统一使用 `user_1001` 演示身份。
+
+开发时 Vite 保留 Host 并代理 `/api`，上线由 Nginx 托管 `dist` 并代理同一路径。不要配置服务器公网 IP 到前端。部署说明见 [docker/DEPLOYMENT.md](../docker/DEPLOYMENT.md)。

@@ -12,6 +12,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useConversationStore } from "../store/conversationStore";
 import { ConversationItem } from "./ConversationItem";
+import { useAuth, logout } from "@/features/auth/auth";
 export function ConversationSidebar({
   id,
   onChoose = () => {},
@@ -20,6 +21,9 @@ export function ConversationSidebar({
   onChoose?: () => void;
 }) {
   const { items, error, loading, load } = useConversationStore();
+  const user = useAuth((s) => s.user);
+  const [logoutError, setLogoutError] = useState("");
+  const [loggingOut, setLoggingOut] = useState(false);
   const [search, setSearch] = useState("");
   const filtered = items.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase()),
@@ -99,16 +103,33 @@ export function ConversationSidebar({
       </a>
       <div className="flex items-center gap-3 border-t pt-4">
         <span className="flex size-8 items-center justify-center rounded-full border border-[#d5ddcb] bg-[#e6ebde] text-xs font-medium text-primary">
-          YG
+          {user?.username.slice(0, 2).toUpperCase()}
         </span>
-        <div>
-          <p className="text-xs font-medium">演示工作空间</p>
-          <p className="mt-1 text-[10px] text-muted-foreground">
-            user_1001 · 演示身份
-          </p>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-medium">{user?.username}</p>
+          <p className="mt-1 text-[10px] text-muted-foreground">我的工作空间</p>
         </div>
-        <span className="ml-auto size-1.5 rounded-full bg-[#7c9273]" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="ml-auto shrink-0"
+          disabled={loggingOut}
+          onClick={() => {
+            setLoggingOut(true);
+            void logout().catch(() => {
+              setLogoutError("退出失败，请重试");
+              setLoggingOut(false);
+            });
+          }}
+        >
+          {loggingOut ? "退出中" : "退出"}
+        </Button>
       </div>
+      {logoutError && (
+        <p role="alert" className="mt-2 text-xs text-destructive">
+          {logoutError}
+        </p>
+      )}
     </nav>
   );
 }

@@ -1,0 +1,17 @@
+.git
+.venv
+venv
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+agent/runtime
+docker/**/volumes
+.tmp
+deployment-data
+.understand-anything
+*.log

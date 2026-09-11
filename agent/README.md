@@ -202,3 +202,9 @@ Milvus 或 Neo4j。
 
 固定测试集报告不调用 DeepSeek，也不会创建工单或修改订单。运行时轨迹中的
 `user_id` 会哈希处理，显式用户标识、密码和验证码会在落盘前脱敏。
+
+## 云端部署与账号
+
+Docker/Nginx 部署见 [部署说明](../docker/DEPLOYMENT.md)。Embedding 使用硅基流动 `Qwen/Qwen3-Embedding-0.6B`（1024 维），重排使用 `BAAI/bge-reranker-v2-m3` API。`requirements.txt` 不包含本地模型运行库；仅选择 `RERANKER_PROVIDER=local` 时另装 `requirements-local-reranker.txt`。
+
+网页登录账号拥有独立的工作台会话、Checkpoint、消息审计和长期偏好。订单、物流、售后工具继续使用固定的 `user_1001` 演示业务身份。原 `user_1001` 工作台会话不会自动归属新注册账号。

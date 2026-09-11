@@ -20,6 +20,7 @@ htmlcov/
 
 # Generated runtime data and local tooling
 .tmp/
+deployment-data/
 agent/runtime/
 docker/**/volumes/
 .understand-anything/

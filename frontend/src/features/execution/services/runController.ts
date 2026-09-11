@@ -2,6 +2,7 @@ import { consumeSSE } from "@/shared/api/sseClient";
 import { useExecutionStore } from "../store/executionStore";
 import { parseEvent } from "../api/eventAdapter";
 import { runApi } from "../api/runApi";
+import { newRunId } from "@/shared/lib/uuid";
 const active = new Set<string>();
 export function hasActiveRun(conversationId: string) {
   return active.has(conversationId);
@@ -9,7 +10,7 @@ export function hasActiveRun(conversationId: string) {
 export async function startRun(conversationId: string, query: string) {
   if (active.has(conversationId)) return;
   active.add(conversationId);
-  const id = crypto.randomUUID();
+  const id = newRunId();
   const store = useExecutionStore.getState();
   store.put({
     id,

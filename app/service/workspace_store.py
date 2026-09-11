@@ -44,24 +44,24 @@ def serialize(row):
     return {column.name: getattr(row, column.name) for column in row.__table__.columns if column.name != "user_id"}
 
 
-async def owned(session, conversation_id):
+async def owned(session, conversation_id, account_id):
     row = await session.get(WorkspaceConversation, conversation_id)
-    if row is None or row.user_id != DEMO_USER:
+    if row is None or row.user_id != account_id:
         raise HTTPException(404, "会话不存在")
     return row
 
 
-async def save_run(run):
+async def save_run(run, account_id):
     async with sessions()() as session:
+        conversation = await owned(session, run["conversation_id"], account_id)
         await session.merge(WorkspaceRun(**run))
-        conversation = await owned(session, run["conversation_id"])
         conversation.updated_at = now()
         await session.commit()
 
 
-async def list_runs(conversation_id):
+async def list_runs(conversation_id, account_id):
     async with sessions()() as session:
-        await owned(session, conversation_id)
+        await owned(session, conversation_id, account_id)
         rows = (await session.execute(select(WorkspaceRun).where(WorkspaceRun.conversation_id == conversation_id).order_by(WorkspaceRun.created_at))).scalars()
         return [serialize(row) for row in rows]
 
