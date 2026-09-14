@@ -10,7 +10,6 @@ from agents.billing_agent import BillingAgentNode
 from agents.recommendation_agent import RecommendationAgent
 from agents.after_sales_agent import AfterSalesAgentNode
 from core.observability import QualityMonitorNode
-from agents.task_planner import TaskPlannerAgent
 from core.workflow.scheduler import TaskScheduler
 from core.workflow.synthesis import SynthesisNode
 
@@ -27,12 +26,7 @@ class AgentGraphManager:
         self.recommendation_node = RecommendationAgent()
         self.after_sales_node = AfterSalesAgentNode()
         self.quality_monitor_node = QualityMonitorNode()
-        self.task_planner = TaskPlannerAgent()
         self.synthesis_node = SynthesisNode()
-
-    def _route_condition(self, state: AgentState) -> str:
-        """根据 Orchestrator 的决策决定走向哪个 Agent 节点。"""
-        return state.get("next_agent", "product_agent")
 
     def build_graph(self, checkpointer=None) -> StateGraph:
         """构建状态图"""
@@ -40,7 +34,6 @@ class AgentGraphManager:
 
         # 1. 添加节点
         builder.add_node("orchestrator", self.orchestrator.route)
-        builder.add_node("task_planner", self.task_planner)
         builder.add_node("task_scheduler", TaskScheduler({
             "product_agent": self.product_node,
             "order_agent": self.billing_node,
@@ -53,20 +46,8 @@ class AgentGraphManager:
         # 2. 定义边
         builder.add_edge(START, "orchestrator")
 
-        # 单领域直接生成一项任务；复合请求先经过计划节点。
-        builder.add_conditional_edges(
-            "orchestrator",
-            self._route_condition,
-            {
-                "product_agent": "task_scheduler",
-                "order_agent": "task_scheduler",
-                "recommendation_agent": "task_scheduler",
-                "after_sales_agent": "task_scheduler",
-                "task_planner": "task_planner",
-            }
-        )
-
-        builder.add_edge("task_planner", "task_scheduler")
+        # 统一入口为所有请求生成计划，单任务和多任务均交由调度器执行。
+        builder.add_edge("orchestrator", "task_scheduler")
         builder.add_edge("task_scheduler", "synthesis")
         builder.add_edge("synthesis", "quality_monitor")
         builder.add_edge("quality_monitor", END)

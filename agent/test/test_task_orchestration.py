@@ -238,11 +238,17 @@ def test_bad_planner_output_executes_nothing():
     assert asyncio.run(TaskScheduler({})({**state([]), **planned})) == {}
 
 
-def test_invalid_router_output_goes_to_planner_instead_of_single_keyword():
+@pytest.mark.parametrize("response", [
+    "[]", '{"next_agent":"order_agent"}', '{"error":"unsupported_intent"}',
+    RuntimeError("model unavailable"),
+])
+def test_invalid_unified_planning_output_does_not_route_by_keyword(response):
     router = object.__new__(OrchestratorAgent)
-    router.llm = FakeLLM('[]')
+    router.llm = FakeLLM(response)
     result = asyncio.run(router.route(state([])))
-    assert result["next_agent"] == "task_planner"
+    assert result["planning_error"]
+    assert result["tasks"] == []
+    assert len(router.llm.calls) == 1
 
 
 def test_synthesis_fallback_preserves_completed_and_unfinished_tasks():
@@ -263,9 +269,11 @@ def test_full_graph_multi_then_single_preserves_history_and_resets_tasks(tmp_pat
     async def run():
         manager = object.__new__(AgentGraphManager)
         manager.orchestrator = object.__new__(OrchestratorAgent)
-        manager.orchestrator.llm = FakeLLM('{"next_agent":"task_planner"}', '{"next_agent":"order_agent"}')
-        manager.task_planner = object.__new__(TaskPlannerAgent)
-        manager.task_planner.llm = FakeLLM(json.dumps({"tasks": [task("a"), task("b", "product_agent")]}))
+        manager.orchestrator.llm = FakeLLM(
+            json.dumps({"tasks": [task("a"), task("b", "product_agent")]}),
+            'invalid json',
+            json.dumps({"tasks": [task("t1")]}),
+        )
         manager.synthesis_node = object.__new__(SynthesisNode)
         manager.synthesis_node.llm = FakeLLM("订单 DG-1001-0002 已发货，商品参数也已查询。")
         manager.quality_monitor_node = QualityMonitorNode(TraceStore(tmp_path / "trace.jsonl", tmp_path / "alert.jsonl"))
@@ -284,12 +292,20 @@ def test_full_graph_multi_then_single_preserves_history_and_resets_tasks(tmp_pat
         assert len(first["task_results"]) == 2
         assert first["messages"][-1].name == "task_orchestrator"
         assert first["metadata"]["quality"]["passed"]
+        failed = await graph.ainvoke({"messages": [HumanMessage(content="还有一个问题")]}, config)
+        assert failed["planning_error"]
+        assert failed["tasks"] == failed["task_results"] == []
+        assert len(inputs) == 2  # 非法计划不得重跑上一轮任务。
+        assert "execution" not in failed["metadata"]
+        assert len(manager.orchestrator.llm.calls) == 2
         second = await graph.ainvoke({"messages": [HumanMessage(content="那什么时候送到？")]}, config)
-        assert len(second["messages"]) == 4
+        assert len(second["messages"]) == 6
+        assert second["planning_error"] == ""
+        assert len(manager.orchestrator.llm.calls) == 3
         assert [r["task_id"] for r in second["task_results"]] == ["t1"]
         assert second["messages"][-1].name == "order_agent"
-        assert inputs[-1]["messages"][-2].content.startswith("订单 DG-1001-0002")
-        assert inputs[-1]["messages"][-2].name == "task_orchestrator"
+        assert inputs[-1]["messages"][-4].content.startswith("订单 DG-1001-0002")
+        assert inputs[-1]["messages"][-4].name == "task_orchestrator"
         assert inputs[-1]["dependency_results"] == []
         assert len(manager.synthesis_node.llm.calls) == 1
         # 缓存命中从图外更新状态，也必须显式清除上一轮结果。
@@ -299,7 +315,7 @@ def test_full_graph_multi_then_single_preserves_history_and_resets_tasks(tmp_pat
         })
         snapshot = await graph.aget_state(config)
         assert snapshot.values["task_results"] == []
-        assert len(snapshot.values["messages"]) == 6
+        assert len(snapshot.values["messages"]) == 8
     asyncio.run(run())
 
 

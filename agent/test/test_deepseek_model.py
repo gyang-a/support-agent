@@ -10,6 +10,7 @@ def _configure_deepseek(monkeypatch) -> None:
     monkeypatch.setenv("DEEPSEEK_API_KEY", "test-deepseek-key")
     monkeypatch.setenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
     monkeypatch.setenv("DEEPSEEK_MODEL", "deepseek-v4-flash")
+    monkeypatch.setenv("DEEPSEEK_FALLBACK_MODEL", "deepseek-chat")
     get_settings.cache_clear()
 
 
@@ -34,9 +35,9 @@ def test_graph_builds_with_deepseek_model(monkeypatch) -> None:
 
     assert {
         "orchestrator",
-        "task_planner",
         "task_scheduler",
         "synthesis",
         "quality_monitor",
     }.issubset(nodes)
+    assert "task_planner" not in nodes
     get_settings.cache_clear()

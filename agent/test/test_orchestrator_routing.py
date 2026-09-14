@@ -1,4 +1,4 @@
-"""总路由全意图判断、上下文裁剪与非法输出兜底测试。"""
+"""统一入口任务规划、上下文裁剪及离线路由兼容测试。"""
 
 import asyncio
 
@@ -72,7 +72,7 @@ def test_deterministic_route_returns_none_for_ambiguous_follow_up() -> None:
 def test_keyword_match_still_checks_all_intents_with_model() -> None:
     class RoutingLLM:
         async def ainvoke(self, _messages):
-            return AIMessage(content='{"next_agent":"task_planner"}')
+            return AIMessage(content='{"tasks":[{"task_id":"a","agent_name":"order_agent","query":"查询订单"},{"task_id":"b","agent_name":"product_agent","query":"解释商品接口参数","depends_on":["a"]}]}')
 
     orchestrator = object.__new__(OrchestratorAgent)
     orchestrator.llm = RoutingLLM()
@@ -86,7 +86,8 @@ def test_keyword_match_still_checks_all_intents_with_model() -> None:
         )
     )
 
-    assert result["next_agent"] == "task_planner"
+    assert result["next_agent"] == "task_orchestrator"
+    assert result["tasks"][1]["depends_on"] == ["a"]
     assert result["metadata"]["route"]["source"] == "llm"
     assert result["task_results"] is None
 
@@ -100,8 +101,7 @@ def test_llm_route_receives_only_latest_three_rounds_with_agent_names() -> None:
             self.messages = messages
             return AIMessage(
                 content=(
-                    '{"next_agent":"product_agent","intent":"follow_up",'
-                    '"confidence":0.8,"entities":{}}'
+                    '{"tasks":[{"task_id":"t1","agent_name":"product_agent","query":"解释该商品"}]}'
                 )
             )
 

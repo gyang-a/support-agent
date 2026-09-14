@@ -6,13 +6,13 @@ from core.workflow.tasks import TaskResult, merge_task_results
 class AgentState(TypedDict):
     """
     LangGraph 全局状态。
-    负责在 Router、各个子 Agent 以及 Memory 之间传递信息。
+    负责在 统一规划入口、各个子 Agent 以及 Memory 之间传递信息。
     """
     # 使用 LangGraph 1.x 的 add_messages reducer：既支持追加新消息，也能按
     # message id 更新已有消息，并自动把消息字典反序列化为 BaseMessage。
     messages: Annotated[list[BaseMessage], add_messages]
     
-    # 决定下一步走向哪个节点的路由标记
+    # 执行归属标记（单任务为专业 Agent，多任务为 task_orchestrator），不控制图跳转
     next_agent: str
     
     # 用户信息，用于鉴权和记忆隔离
@@ -29,7 +29,7 @@ class AgentState(TypedDict):
     # 工具调用的附带信息或元数据
     metadata: dict[str, Any]
 
-    # 本轮任务与结果；Router 用 None 显式清空结果 reducer。
+    # 本轮任务与结果；统一规划入口 用 None 显式清空结果 reducer。
     tasks: NotRequired[list[dict[str, Any]]]
     task_results: Annotated[list[TaskResult], merge_task_results]
     planning_error: NotRequired[str]
